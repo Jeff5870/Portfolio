@@ -1,0 +1,34 @@
+INCLUDE = -I.
+
+all: build_encoder build_decoder
+
+build_encoder:
+	gcc -O3 -o encoder.exe encoder.c -lm
+
+build_decoder:
+	gcc -O3 -o decoder.exe decoder.c -lm
+
+demo0:
+	./encoder.exe 0 KimberlyNCat.bmp R.txt G.txt B.txt dim.txt
+	./decoder.exe 0 ResKimberlyNCat.bmp R.txt G.txt B.txt dim.txt
+	diff KimberlyNCat.bmp ResKimberlyNCat.bmp
+	cmp  KimberlyNCat.bmp ResKimberlyNCat.bmp
+demo1:
+	./encoder.exe 1 KimberlyNCat.bmp Qt_Y.txt Qt_Cb.txt Qt_Cr.txt dim.txt qF_Y.raw qF_Cb.raw qF_Cr.raw eF_Y.raw eF_Cb.raw eF_Cr.raw
+	./decoder.exe 1 QResKimberly.bmp KimberlyNCat.bmp Qt_Y.txt Qt_Cb.txt Qt_Cr.txt dim.txt qF_Y.raw qF_Cb.raw qF_Cr.raw
+	./decoder.exe 1 ResKimberlyNCat.bmp Qt_Y.txt Qt_Cb.txt Qt_Cr.txt dim.txt qF_Y.raw qF_Cb.raw qF_Cr.raw eF_Y.raw eF_Cb.raw eF_Cr.raw
+	cmp  KimberlyNCat.bmp ResKimberlyNCat.bmp 
+	diff KimberlyNCat.bmp ResKimberlyNCat.bmp 
+demo2:
+	./encoder.exe 2 KimberlyNCat.bmp ascii rle_code.txt
+	./decoder.exe 2 QResKimberly_2.bmp ascii rle_code.txt
+	cmp  QResKimberly.bmp QResKimberly_2.bmp 
+	diff QResKimberly.bmp QResKimberly_2.bmp 
+	./encoder.exe 2 KimberlyNCat.bmp binary rle_code.bin
+	./decoder.exe 2 QResKimberly_2.bmp binary rle_code.bin
+	cmp  QResKimberly.bmp QResKimberly_2.bmp 
+	diff QResKimberly.bmp QResKimberly_2.bmp 
+clean:
+	rm -f encoder.exe decoder.exe R.txt G.txt B.txt dim.txt Qt_Y.txt Qt_Cb.txt Qt_Cr.txt qF_Y.raw qF_Cb.raw qF_Cr.raw eF_Y.raw eF_Cb.raw eF_Cr.raw ResKimberlyNCat.bmp QResKimberly.bmp QResKimberly_2.bmp ResKimberly.bmp rle_code.bin rle_code.txt
+
+.PHONY: build_encoder build_decoder demo0 clean
